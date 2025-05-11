@@ -1,116 +1,81 @@
+# hxh_web_game/app.py
+from flask import Flask, render_template, request, redirect, url_for, session
 import json
 import os
 
-# ------------------------------------------
-# Archivo de datos
-# ------------------------------------------
-ARCHIVO_PERSONAJES = "personajes.json"
+app = Flask(__name__)
+app.secret_key = 'hunterxhunter_clave_secreta'
 
-# ------------------------------------------
-# Preguntas con sus atributos y textos
-# ------------------------------------------
-preguntas = {
-    "sexo": {
-        "texto": "¿Cuál es el sexo del personaje? (masculino/femenino): ",
-        "tipo": "opcion"
-    },
-    "edad": {
-        "texto": "¿Qué edad tiene? (niño/adolescente/adulto): ",
-        "tipo": "opcion"
-    },
-    "tipo_de_nen": {
-        "texto": "¿Qué tipo de nen tiene? (reforzador/emisor/transmutador/especialista/conjurador/manipulador): ",
-        "tipo": "opcion"
-    },
-    "clan": {
-        "texto": "¿Pertenece a algún clan? (Zoldyck/Kurta/Ninguno): ",
-        "tipo": "opcion"
-    }
-}
+ARCHIVO = "personajes.json"
+ATRIBUTOS = ["sexo", "edad", "es_usuario_de_nen", "tipo_de_nen", "clan"]
 
-# ------------------------------------------
-# Cargar personajes desde archivo JSON
-# ------------------------------------------
+# ----------------------------
+# Funciones auxiliares
+# ----------------------------
 def cargar_personajes():
-    if os.path.exists(ARCHIVO_PERSONAJES):
-        with open(ARCHIVO_PERSONAJES, "r", encoding="utf-8") as f:
+    if os.path.exists(ARCHIVO):
+        with open(ARCHIVO, "r", encoding="utf-8") as f:
             return json.load(f)
-    else:
-        return []  # En caso de que el archivo no exista
+    return []
 
-# ------------------------------------------
-# Guardar personajes al archivo JSON
-# ------------------------------------------
 def guardar_personajes(personajes):
-    with open(ARCHIVO_PERSONAJES, "w", encoding="utf-8") as f:
+    with open(ARCHIVO, "w", encoding="utf-8") as f:
         json.dump(personajes, f, indent=4, ensure_ascii=False)
 
-# ------------------------------------------
-# Aprender un nuevo personaje del usuario
-# ------------------------------------------
-def aprender_nuevo_personaje(personajes):
-    print("\n🧠 Enséñame sobre ese personaje que no conozco...")
-    nombre = input("Nombre del personaje: ").strip()
+def filtrar_por_atributo(personajes, atributo, valor):
+    return [p for p in personajes if str(p.get(atributo)).lower() == str(valor).lower()]
 
-    nuevo = {
-        "nombre": nombre,
-        "es_usuario_de_nen": True  # Asumimos que todos usan nen
-    }
+# ----------------------------
+# Rutas del juego
+# ----------------------------
+@app.route("/")
+def inicio():
+    session['personajes'] = cargar_personajes()
+    session['indice'] = 0
+    return redirect(url_for('preguntar'))
 
-    for atributo, config in preguntas.items():
-        respuesta = input(config["texto"]).strip().lower()
-        if atributo == "clan" and respuesta == "ninguno":
-            respuesta = None
-        nuevo[atributo] = respuesta
+@app.route("/preguntar", methods=["GET", "POST"])
+def preguntar():
+    personajes = session.get('personajes', [])
+    indice = session.get('indice', 0)
 
-    personajes.append(nuevo)
-    guardar_personajes(personajes)
-    print(f"\n✅ ¡Gracias! He aprendido sobre {nombre}.")
+    if len(personajes) == 1:
+        return render_template("adivinar.html", personaje=personajes[0])
 
-# ------------------------------------------
-# Juego principal
-# ------------------------------------------
-def jugar():
-    personajes = cargar_personajes()
+    if indice >= len(ATRIBUTOS):
+        return render_template("no_se.html")
 
-    if not personajes:
-        print("⚠️ No hay personajes cargados. Agrega al menos uno en personajes.json.")
-        return
+    atributo_actual = ATRIBUTOS[indice]
 
-    print("🧠 ¡Piensa en un personaje de Hunter x Hunter y yo lo adivinaré!\n")
+    if request.method == "POST":
+        respuesta = request.form.get("respuesta")
+        valor = True if respuesta == "sí" else False
+        if atributo_actual in ["sexo", "edad", "tipo_de_nen", "clan"]:
+            valor = request.form.get("valor")
+        personajes_filtrados = filtrar_por_atributo(personajes, atributo_actual, valor)
+        session['personajes'] = personajes_filtrados
+        session['indice'] = indice + 1
+        return redirect(url_for('preguntar'))
 
-    posibles = personajes.copy()
+    return render_template("pregunta.html", atributo=atributo_actual)
 
-    for atributo, config in preguntas.items():
-        respuesta = input(config["texto"]).strip().lower()
+@app.route("/nuevo", methods=["GET", "POST"])
+def nuevo():
+    if request.method == "POST":
+        datos = {
+            "nombre": request.form["nombre"],
+            "sexo": request.form["sexo"],
+            "edad": request.form["edad"],
+            "es_usuario_de_nen": request.form["es_usuario_de_nen"] == "sí",
+            "tipo_de_nen": request.form["tipo_de_nen"],
+            "clan": request.form["clan"] or None
+        }
+        personajes = cargar_personajes()
+        personajes.append(datos)
+        guardar_personajes(personajes)
+        return redirect(url_for("inicio"))
+    return render_template("nuevo.html")
 
-        if atributo == "clan" and respuesta == "ninguno":
-            respuesta = None
-
-        posibles = [
-            p for p in posibles if str(p[atributo]).lower() == str(respuesta)
-        ]
-
-        if len(posibles) == 1:
-            print(f"\n🎯 ¡Tu personaje es {posibles[0]['nombre']}!")
-            return
-        elif len(posibles) == 0:
-            print("\n❌ No conozco ese personaje.")
-            aprender = input("¿Quieres enseñármelo? (sí/no): ").strip().lower()
-            if aprender in ["sí", "si", "s"]:
-                aprender_nuevo_personaje(personajes)
-            else:
-                print("👌 Está bien, tal vez la próxima vez.")
-            return
-
-    if len(posibles) > 1:
-        print("\n🤔 No estoy seguro, pero podría ser uno de estos:")
-        for p in posibles:
-            print(f"- {p['nombre']}")
-
-# ------------------------------------------
-# Ejecutar juego
-# ------------------------------------------
 if __name__ == "__main__":
-    jugar()
+    app.run(debug=True)
 

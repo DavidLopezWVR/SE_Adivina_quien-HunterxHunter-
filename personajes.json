@@ -38,5 +38,13 @@
         "es_usuario_de_nen": true,
         "tipo_de_nen": "emisor",
         "clan": null
+    },
+    {
+        "nombre": "\"c:/Users/nanda/Desktop/SIST. EXPERTOS/P2/SE_Adivina_quien/venv/Scripts/python.exe\" \"c:/Users/nanda/Desktop/SIST. EXPERTOS/P2/SE_Adivina_quien/hxh_adivina_quien.py\"",
+        "es_usuario_de_nen": true,
+        "sexo": "masculino",
+        "edad": "niño",
+        "tipo_de_nen": "reforzador",
+        "clan": null
     }
 ]

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Pregunta</title></head>
+<body>
+  <h2>¿Cuál es el valor del atributo: {{ atributo }}?</h2>
+  <form method="post">
+    {% if atributo in ["sexo", "edad", "tipo_de_nen", "clan"] %}
+      <input type="text" name="valor" required>
+    {% else %}
+      <button type="submit" name="respuesta" value="sí">Sí</button>
+      <button type="submit" name="respuesta" value="no">No</button>
+    {% endif %}
+    {% if atributo in ["sexo", "edad", "tipo_de_nen", "clan"] %}
+      <button type="submit" name="respuesta" value="enviar">Enviar</button>
+    {% endif %}
+  </form>
+</body>
+</html>
