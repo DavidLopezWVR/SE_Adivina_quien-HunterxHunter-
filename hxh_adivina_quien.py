@@ -36,41 +36,7 @@ def cargar_personajes():
         with open(ARCHIVO_PERSONAJES, "r", encoding="utf-8") as f:
             return json.load(f)
     else:
-        # Datos iniciales por defecto
-        return [
-            {
-                "nombre": "Gon Freecss",
-                "sexo": "masculino",
-                "edad": "niño",
-                "es_usuario_de_nen": True,
-                "tipo_de_nen": "reforzador",
-                "clan": None
-            },
-            {
-                "nombre": "Killua Zoldyck",
-                "sexo": "masculino",
-                "edad": "niño",
-                "es_usuario_de_nen": True,
-                "tipo_de_nen": "transmutador",
-                "clan": "Zoldyck"
-            },
-            {
-                "nombre": "Kurapika",
-                "sexo": "masculino",
-                "edad": "adolescente",
-                "es_usuario_de_nen": True,
-                "tipo_de_nen": "especialista",
-                "clan": "Kurta"
-            },
-            {
-                "nombre": "Hisoka",
-                "sexo": "masculino",
-                "edad": "adulto",
-                "es_usuario_de_nen": True,
-                "tipo_de_nen": "transmutador",
-                "clan": None
-            }
-        ]
+        return []  # En caso de que el archivo no exista
 
 # ------------------------------------------
 # Guardar personajes al archivo JSON
@@ -86,7 +52,10 @@ def aprender_nuevo_personaje(personajes):
     print("\n🧠 Enséñame sobre ese personaje que no conozco...")
     nombre = input("Nombre del personaje: ").strip()
 
-    nuevo = {"nombre": nombre, "es_usuario_de_nen": True}
+    nuevo = {
+        "nombre": nombre,
+        "es_usuario_de_nen": True  # Asumimos que todos usan nen
+    }
 
     for atributo, config in preguntas.items():
         respuesta = input(config["texto"]).strip().lower()
@@ -103,6 +72,11 @@ def aprender_nuevo_personaje(personajes):
 # ------------------------------------------
 def jugar():
     personajes = cargar_personajes()
+
+    if not personajes:
+        print("⚠️ No hay personajes cargados. Agrega al menos uno en personajes.json.")
+        return
+
     print("🧠 ¡Piensa en un personaje de Hunter x Hunter y yo lo adivinaré!\n")
 
     posibles = personajes.copy()
@@ -123,7 +97,7 @@ def jugar():
         elif len(posibles) == 0:
             print("\n❌ No conozco ese personaje.")
             aprender = input("¿Quieres enseñármelo? (sí/no): ").strip().lower()
-            if aprender == "sí":
+            if aprender in ["sí", "si", "s"]:
                 aprender_nuevo_personaje(personajes)
             else:
                 print("👌 Está bien, tal vez la próxima vez.")
@@ -139,3 +113,4 @@ def jugar():
 # ------------------------------------------
 if __name__ == "__main__":
     jugar()
+
