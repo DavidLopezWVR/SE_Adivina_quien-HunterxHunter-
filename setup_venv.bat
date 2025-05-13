@@ -9,5 +9,5 @@ echo 📦 Instalando dependencias...
 pip install -r requirements.txt
 
 echo ✅ Listo. Puedes ejecutar el juego con:
-echo python hxh_adivina_quien.py
+echo python app.py
 pause
