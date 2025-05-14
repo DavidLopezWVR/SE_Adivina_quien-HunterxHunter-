@@ -9,7 +9,9 @@ PERSONAJES = [
         "es_miembro_de_la_brigada": False,
         "usa_cartas": False,
         "tiene_cabello_blanco": False,
-        "es_asesino": False
+        "es_asesino": False,
+        "usa_pesca": True,
+        "es_hombre": True
     },
     {
         "nombre": "Killua Zoldyck",
@@ -19,17 +21,21 @@ PERSONAJES = [
         "es_miembro_de_la_brigada": False,
         "usa_cartas": False,
         "tiene_cabello_blanco": True,
-        "es_asesino": True
+        "es_asesino": True,
+        "usa_pesca": False,
+        "es_hombre": True
     },
     {
         "nombre": "Hisoka Morow",
         "imagen": "img/hisoka.png",
         "categoria": "Villano",
         "es_usuario_de_nen": True,
-        "es_miembro_de_la_brigada": False,  # intencionadamente falso
+        "es_miembro_de_la_brigada": False,
         "usa_cartas": True,
         "tiene_cabello_blanco": False,
-        "es_asesino": True
+        "es_asesino": True,
+        "usa_pesca": False,
+        "es_hombre": True
     },
     {
         "nombre": "Chrollo Lucilfer",
@@ -39,7 +45,9 @@ PERSONAJES = [
         "es_miembro_de_la_brigada": True,
         "usa_cartas": False,
         "tiene_cabello_blanco": False,
-        "es_asesino": True
+        "es_asesino": True,
+        "usa_pesca": False,
+        "es_hombre": True
     },
     {
         "nombre": "Kurapika",
@@ -49,6 +57,68 @@ PERSONAJES = [
         "es_miembro_de_la_brigada": False,
         "usa_cartas": False,
         "tiene_cabello_blanco": False,
-        "es_asesino": True
+        "es_asesino": True,
+        "usa_pesca": False,
+        "es_hombre": False
+    },
+    {
+        "nombre": "Leorio Paradinight",
+        "imagen": "img/leorio.png",
+        "categoria": "Amigo",
+        "es_usuario_de_nen": True,
+        "es_miembro_de_la_brigada": False,
+        "usa_cartas": False,
+        "tiene_cabello_blanco": False,
+        "es_asesino": False,
+        "usa_pesca": False,
+        "es_hombre": True
+    },
+    {
+        "nombre": "Illumi Zoldyck",
+        "imagen": "img/illumi.png",
+        "categoria": "Zoldyck",
+        "es_usuario_de_nen": True,
+        "es_miembro_de_la_brigada": False,
+        "usa_cartas": False,
+        "tiene_cabello_blanco": False,
+        "es_asesino": True,
+        "usa_pesca": False,
+        "es_hombre": True
+    },
+    {
+        "nombre": "Neferpitou",
+        "imagen": "img/pitou.png",
+        "categoria": "Quimera",
+        "es_usuario_de_nen": True,
+        "es_miembro_de_la_brigada": False,
+        "usa_cartas": False,
+        "tiene_cabello_blanco": True,
+        "es_asesino": True,
+        "usa_pesca": False,
+        "es_hombre": False
+    },
+    {
+        "nombre": "Meruem",
+        "imagen": "img/meruem.png",
+        "categoria": "Rey Quimera",
+        "es_usuario_de_nen": True,
+        "es_miembro_de_la_brigada": False,
+        "usa_cartas": False,
+        "tiene_cabello_blanco": False,
+        "es_asesino": True,
+        "usa_pesca": False,
+        "es_hombre": True
+    },
+    {
+        "nombre": "Biscuit Krueger",
+        "imagen": "img/biscuit.png",
+        "categoria": "Cazadora",
+        "es_usuario_de_nen": True,
+        "es_miembro_de_la_brigada": False,
+        "usa_cartas": False,
+        "tiene_cabello_blanco": False,
+        "es_asesino": False,
+        "usa_pesca": False,
+        "es_hombre": False
     }
 ]

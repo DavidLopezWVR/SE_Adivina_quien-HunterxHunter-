@@ -1,3 +1,4 @@
+# main.py
 import pygame
 import sys
 from base_datos import PERSONAJES
@@ -11,18 +12,22 @@ fuente = pygame.font.SysFont(None, 36)
 blanco = (255, 255, 255)
 negro = (0, 0, 0)
 
-# Preguntas y claves
+# Preguntas y claves (más inteligentes)
 preguntas = [
+    ("¿Es un hombre?", "es_hombre"),
     ("¿Es usuario de Nen?", "es_usuario_de_nen"),
     ("¿Es miembro de la Brigada Fantasma?", "es_miembro_de_la_brigada"),
     ("¿Usa cartas como arma?", "usa_cartas"),
     ("¿Tiene el cabello blanco?", "tiene_cabello_blanco"),
-    ("¿Es un asesino?", "es_asesino")
+    ("¿Es un asesino?", "es_asesino"),
+    ("¿Usa una caña de pescar como arma?", "usa_pesca")
 ]
 
+# Variables de juego
 personajes_filtrados = PERSONAJES.copy()
 pregunta_actual = 0
 
+# Funciones para mostrar texto e imagen
 def mostrar_texto(texto, y, centro=True):
     render = fuente.render(texto, True, negro)
     rect = render.get_rect(center=(ANCHO//2, y)) if centro else render.get_rect(topleft=(20, y))
@@ -55,8 +60,8 @@ while True:
         break
 
     texto_pregunta, clave = preguntas[pregunta_actual]
-    mostrar_texto(texto_pregunta, ALTO//3)
-    mostrar_texto("Presiona [S] para Sí o [N] para No", ALTO//2)
+    mostrar_texto(texto_pregunta, ALTO // 3)
+    mostrar_texto("Presiona [S] para Sí o [N] para No", ALTO // 2)
 
     pygame.display.flip()
 
@@ -67,8 +72,8 @@ while True:
 
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_s:
-                personajes_filtrados = [p for p in personajes_filtrados if p[clave] == True]
+                personajes_filtrados = [p for p in personajes_filtrados if p.get(clave) == True]
                 pregunta_actual += 1
             elif evento.key == pygame.K_n:
-                personajes_filtrados = [p for p in personajes_filtrados if p[clave] == False]
+                personajes_filtrados = [p for p in personajes_filtrados if p.get(clave) == False]
                 pregunta_actual += 1
