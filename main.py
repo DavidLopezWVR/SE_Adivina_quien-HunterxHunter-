@@ -1,25 +1,74 @@
-# main.py
-from base_datos import obtener_personajes
+import pygame
+import sys
+from base_datos import PERSONAJES
 
-def filtrar_personajes(personajes, respuestas):
-    """
-    Filtra los personajes según las respuestas dadas.
-    """
-    filtrados = []
-    for personaje in personajes:
-        coincide = True
-        for pregunta, respuesta in respuestas.items():
-            if personaje.get(pregunta) != respuesta:
-                coincide = False
-                break
-        if coincide:
-            filtrados.append(personaje)
-    return filtrados
+# Inicialización
+pygame.init()
+ANCHO, ALTO = 800, 600
+pantalla = pygame.display.set_mode((ANCHO, ALTO))
+pygame.display.set_caption("Adivina el personaje - Hunter x Hunter")
+fuente = pygame.font.SysFont(None, 36)
+blanco = (255, 255, 255)
+negro = (0, 0, 0)
 
-def obtener_personaje_adivinado(candidatos):
-    """
-    Si hay un solo candidato, lo devuelve, si no hay candidatos, devuelve 'Ninguno'.
-    """
-    if len(candidatos) == 1:
-        return candidatos[0]
-    return None
+# Preguntas y claves
+preguntas = [
+    ("¿Es usuario de Nen?", "es_usuario_de_nen"),
+    ("¿Es miembro de la Brigada Fantasma?", "es_miembro_de_la_brigada"),
+    ("¿Usa cartas como arma?", "usa_cartas"),
+    ("¿Tiene el cabello blanco?", "tiene_cabello_blanco"),
+    ("¿Es un asesino?", "es_asesino")
+]
+
+personajes_filtrados = PERSONAJES.copy()
+pregunta_actual = 0
+
+def mostrar_texto(texto, y, centro=True):
+    render = fuente.render(texto, True, negro)
+    rect = render.get_rect(center=(ANCHO//2, y)) if centro else render.get_rect(topleft=(20, y))
+    pantalla.blit(render, rect)
+
+def mostrar_imagen(nombre_archivo):
+    imagen = pygame.image.load(f"{nombre_archivo}")
+    imagen = pygame.transform.scale(imagen, (200, 300))
+    pantalla.blit(imagen, (ANCHO//2 - 100, 100))
+
+def pantalla_final(personaje):
+    pantalla.fill(blanco)
+    mostrar_texto(f"¡Tu personaje es: {personaje['nombre']}!", 50)
+    mostrar_imagen(personaje["imagen"])
+    pygame.display.flip()
+    pygame.time.wait(5000)
+
+# Bucle principal
+while True:
+    pantalla.fill(blanco)
+
+    if len(personajes_filtrados) == 1:
+        pantalla_final(personajes_filtrados[0])
+        break
+    elif pregunta_actual >= len(preguntas):
+        pantalla.fill(blanco)
+        mostrar_texto("No pude adivinar el personaje.", ALTO // 2)
+        pygame.display.flip()
+        pygame.time.wait(5000)
+        break
+
+    texto_pregunta, clave = preguntas[pregunta_actual]
+    mostrar_texto(texto_pregunta, ALTO//3)
+    mostrar_texto("Presiona [S] para Sí o [N] para No", ALTO//2)
+
+    pygame.display.flip()
+
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        if evento.type == pygame.KEYDOWN:
+            if evento.key == pygame.K_s:
+                personajes_filtrados = [p for p in personajes_filtrados if p[clave] == True]
+                pregunta_actual += 1
+            elif evento.key == pygame.K_n:
+                personajes_filtrados = [p for p in personajes_filtrados if p[clave] == False]
+                pregunta_actual += 1
