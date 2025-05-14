@@ -1,10 +1,6 @@
-# Ignorar entorno virtual
-venv/
-
-# Archivos de caché de Python
+# Ignorar archivos de caché de Python
 __pycache__/
+*.py[cod]
 
-# Ignorar archivos del sistema
-.DS_Store
-Thumbs.db
-.vscode
+# Ignorar configuraciones de VS Code
+.vscode/
