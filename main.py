@@ -1,5 +1,6 @@
 # main.py
 from preguntas import obtener_preguntas
+from interfaz import mostrar_pantalla_inicio
 from agregar_personajes import agregar_personaje_pygame
 import pygame
 import json
@@ -10,9 +11,14 @@ with open("personajes.json", "r", encoding="utf-8") as archivo:
 
 # Inicialización
 pygame.init()
-ANCHO, ALTO = 800, 600
+ANCHO, ALTO = 900, 800
+pygame.display.set_caption("Adivina el personaje - HunterxHunter")
 pantalla = pygame.display.set_mode((ANCHO, ALTO))
-pygame.display.set_caption("Adivina el personaje - Hunter x Hunter")
+
+# Mostrar pantalla inicial antes de cargar juego
+mostrar_pantalla_inicio(pantalla, ANCHO, ALTO, fondo_path="img_interfaz/fondo_2.png")
+
+#Pantalla de juego
 fuente = pygame.font.SysFont(None, 36)
 blanco = (255, 255, 255)
 negro = (0, 0, 0)
@@ -62,11 +68,16 @@ while True:
                 if evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_a:
                         agregar_personaje_pygame(pantalla, PERSONAJES)
-                        esperando = False
-                    elif evento.key == pygame.K_ESCAPE:
-                        esperando = False
-        break
 
+                        # 🔄 Reiniciar juego
+                        with open("personajes.json", "r", encoding="utf-8") as archivo:
+                            PERSONAJES = json.load(archivo)
+                        personajes_filtrados = PERSONAJES.copy()
+                        pregunta_actual = 0
+                        esperando = False  # salir del bucle interno y continuar el juego
+                    elif evento.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
 
 
     texto_pregunta, clave = preguntas[pregunta_actual]

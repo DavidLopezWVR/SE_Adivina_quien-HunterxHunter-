@@ -15,7 +15,7 @@ def mostrar_texto(texto, y, pantalla, fuente, centro=True):
     pantalla.blit(render, rect)
 
 def agregar_personaje_pygame(pantalla, PERSONAJES):
-    fuente = pygame.font.SysFont(None, 36)  # ← Mover aquí la inicialización
+    fuente = pygame.font.SysFont(None, 36)
 
     campos = [
         ("Nombre del personaje:", "nombre"),
@@ -51,7 +51,6 @@ def agregar_personaje_pygame(pantalla, PERSONAJES):
         mostrar_texto("Agregar nuevo personaje", 50, pantalla, fuente)
         mostrar_texto(pregunta, 150, pantalla, fuente)
         mostrar_texto(texto_input, 250, pantalla, fuente)
-
         pygame.display.flip()
 
         for evento in pygame.event.get():
@@ -74,6 +73,13 @@ def agregar_personaje_pygame(pantalla, PERSONAJES):
                 else:
                     texto_input += evento.unicode
 
+    # Guardar en archivo
     PERSONAJES.append(nuevo_personaje)
     with open("personajes.json", "w", encoding="utf-8") as f:
         json.dump(PERSONAJES, f, indent=4, ensure_ascii=False)
+
+    # Mostrar mensaje de confirmación
+    pantalla.fill(blanco)
+    mostrar_texto("¡Personaje agregado correctamente!", ALTO // 2, pantalla, fuente)
+    pygame.display.flip()
+    pygame.time.wait(3000)  # Esperar 3 segundos
