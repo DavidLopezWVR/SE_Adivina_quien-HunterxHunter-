@@ -18,5 +18,5 @@ def obtener_preguntas():
     ("¿Es un antagonista?", "es_antagonista"),
     ("¿Tu personaje tiene apariencia de niño o adolescente?" , "tiene_apariencia_infanto_juvenil"),
     ("¿Tu personaje es padre o madre de otro personaje de la serie?", "es_padre_de_otro_personaje"),
-    ("¿Tu personaje ha reencarnado o cambiado significativamente de forma?", "reencarno_o_cambio_de_forma")
+    ("¿Tu personaje ha reencarnado o cambiado de forma?", "reencarno_o_cambio_de_forma")
     ]
